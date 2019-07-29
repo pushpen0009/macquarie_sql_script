@@ -1,0 +1,38 @@
+CREATE TABLE public.events_detail
+(
+  id integer NOT NULL DEFAULT nextval('events_detail_id_seq'::regclass),
+  event_type character varying(50) NOT NULL,
+  event_desc character varying(50) NOT NULL,
+  CONSTRAINT events_detail_pkey PRIMARY KEY (id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE public.events_detail
+  OWNER TO postgres;
+
+
+
+INSERT INTO public.events_detail (id, event_type, event_desc) values (1, 'login', 'Macts Login Event');
+
+CREATE TABLE public.audit_logs
+(
+  id integer NOT NULL DEFAULT nextval('audit_logs_id_seq'::regclass),
+  user_id character varying(20),
+  system_id character varying(20),
+  event_id integer,
+  event_datetime timestamp with time zone,
+  event_parameters character varying(50),
+  event_status character varying(20),
+  created_by character varying(20),
+  created_datetime timestamp with time zone,
+  CONSTRAINT audit_logs_pkey PRIMARY KEY (id),
+  CONSTRAINT event_type_event_id_fkey FOREIGN KEY (event_id)
+      REFERENCES public.events_detail (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE public.audit_logs
+  OWNER TO postgres;

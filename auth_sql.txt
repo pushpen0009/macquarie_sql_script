@@ -1,0 +1,42 @@
+CREATE TABLE macquarie.users
+(
+    id integer NOT NULL,
+    enabled boolean NOT NULL,
+    username character varying(50) NOT NULL,
+    CONSTRAINT users_pkey PRIMARY KEY (id),
+    CONSTRAINT uk_r43af9ap4edm43mmtq01oddj6 UNIQUE (username)
+
+);
+
+CREATE TABLE macquarie.role
+(
+    id integer NOT NULL,
+    name character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT role_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE macquarie.user_role
+(
+    users_id integer NOT NULL,
+    role_id integer NOT NULL,
+    CONSTRAINT fka68196081fvovjhkek5m97n3y FOREIGN KEY (role_id)
+        REFERENCES macquarie.role (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT fkm3tmf7s11ilny7lvpiks60j0n FOREIGN KEY (users_id)
+        REFERENCES macquarie.users (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+);
+
+
+//Dummy data for testing
+INSERT INTO USERS (ID, USERNAME, ENABLED) VALUES (1, 'admin', true);
+INSERT INTO USERS (ID, USERNAME, ENABLED) VALUES (2, 'analyst', true);
+
+INSERT INTO ROLE (ID, NAME) VALUES (1, 'ROLE_ANALYST');
+INSERT INTO ROLE (ID, NAME) VALUES (2, 'ROLE_ADMIN');
+
+INSERT INTO USER_ROLE (USERS_ID, ROLE_ID) VALUES (1, 2);
+INSERT INTO USER_ROLE (USERS_ID, ROLE_ID) VALUES (2, 1);
+
